@@ -77,7 +77,7 @@ class LoFTR(nn.Module):
         >>> out = loftr(input)
     """
 
-    def __init__(self, pretrained: Optional[str] = 'outdoor', config: Dict = default_cfg):
+    def __init__(self, pretrained: Optional[str] = 'outdoor', config: Dict = default_cfg, ckpt_path: str = None):
         super().__init__()
         # Misc
         self.config = config
@@ -95,8 +95,12 @@ class LoFTR(nn.Module):
         if pretrained is not None:
             if pretrained not in urls.keys():
                 raise ValueError(f"pretrained should be None or one of {urls.keys()}")
-            pretrained_dict = torch.hub.load_state_dict_from_url(
-                urls[pretrained], map_location=lambda storage, loc: storage)
+            if ckpt_path is None:
+                pretrained_dict = torch.hub.load_state_dict_from_url(
+                    urls[pretrained], map_location=lambda storage, loc: storage)
+            else:
+                state_dict = torch.load(ckpt_path)
+                pretrained_dict['state_dict'] = state_dict
             self.load_state_dict(pretrained_dict['state_dict'])
         self.eval()
 
