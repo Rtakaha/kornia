@@ -99,10 +99,10 @@ class LoFTR(nn.Module):
             if ckpt_path is None:
                 pretrained_dict = torch.hub.load_state_dict_from_url(
                     urls[pretrained], map_location=lambda storage, loc: storage)
+                self.load_state_dict(pretrained_dict['state_dict'])
             else:
                 state_dict = torch.load(ckpt_path)
-                pretrained_dict['state_dict'] = state_dict
-            self.load_state_dict(pretrained_dict['state_dict'])
+                self.load_state_dict(state_dict)
         self.eval()
 
     def forward(self, data: dict) -> Dict[str, torch.Tensor]:
