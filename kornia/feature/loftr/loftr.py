@@ -92,6 +92,7 @@ class LoFTR(nn.Module):
         self.loftr_fine = LocalFeatureTransformer(config["fine"])
         self.fine_matching = FineMatching()
         self.pretrained = pretrained
+        pretrained_dict = {}
         if pretrained is not None:
             if pretrained not in urls.keys():
                 raise ValueError(f"pretrained should be None or one of {urls.keys()}")
